@@ -1,8 +1,8 @@
-AC_INIT(rtorrent, 0.9.7, sundell.software@gmail.com)
+AC_INIT(rtorrent, 0.9.8, sundell.software@gmail.com)
 
-AC_DEFINE(API_VERSION, 9, api version)
+AC_DEFINE(API_VERSION, 10, api version)
 
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_HEADERS(config.h)
 
 AC_PROG_RANLIB
@@ -14,9 +14,7 @@ RAK_CHECK_CXXFLAGS
 RAK_ENABLE_DEBUG
 RAK_ENABLE_EXTRA_DEBUG
 RAK_ENABLE_WERROR
-
 RAK_CHECK_CXX11
-RAK_CHECK_TR1_LIB
 
 TORRENT_DISABLE_IPV6
 
@@ -38,13 +36,9 @@ if test "x$ax_cv_ncursesw" != xyes && test "x$ax_cv_ncurses" != xyes; then
 	AC_MSG_ERROR([requires either NcursesW or Ncurses library])
 fi
 
-PKG_CHECK_MODULES([LIBCURL], [libcurl], , [LIBCURL_CHECK_CONFIG])
+PKG_CHECK_MODULES([LIBCURL], [libcurl],, [LIBCURL_CHECK_CONFIG])
 PKG_CHECK_MODULES([CPPUNIT], [cppunit],, [no_cppunit="yes"])
-PKG_CHECK_MODULES([DEPENDENCIES], [libtorrent >= 0.13.7])
-
-LIBS="$PTHREAD_LIBS $CURSES_LIB $CPPUNIT_LIBS $LIBCURL $LIBCURL_LIBS $DEPENDENCIES_LIBS $LIBS"
-CFLAGS="$CFLAGS $PTHREAD_CFLAGS $CPPUNIT_CFLAGS $LIBCURL_CPPFLAGS $LIBCURL_CFLAGS $DEPENDENCIES_CFLAGS $CURSES_CFLAGS"
-CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS $CPPUNIT_CFLAGS $LIBCURL_CPPFLAGS $LIBCURL_CFLAGS $DEPENDENCIES_CFLAGS $CURSES_CFLAGS"
+PKG_CHECK_MODULES([DEPENDENCIES], [libtorrent >= 0.13.8])
 
 AC_LANG_PUSH(C++)
 TORRENT_WITH_XMLRPC_C
@@ -62,15 +56,15 @@ CC_ATTRIBUTE_UNUSED(
 	AC_DEFINE([__UNUSED], [], [Null-wrapper if unused attribute is unsupported])
 )
 
+dnl Only update global build variables immediately before generating the output,
+dnl to avoid affecting the global build environment for other autoconf checks.
+LIBS="$PTHREAD_LIBS $CURSES_LIB $CURSES_LIBS $CPPUNIT_LIBS $LIBCURL $LIBCURL_LIBS $DEPENDENCIES_LIBS $LIBS"
+CFLAGS="$CFLAGS $PTHREAD_CFLAGS $CPPUNIT_CFLAGS $LIBCURL_CPPFLAGS $LIBCURL_CFLAGS $DEPENDENCIES_CFLAGS $CURSES_CFLAGS"
+CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS $CPPUNIT_CFLAGS $LIBCURL_CPPFLAGS $LIBCURL_CFLAGS $DEPENDENCIES_CFLAGS $CURSES_CFLAGS"
+
 AC_OUTPUT([
 	Makefile
 	doc/Makefile
 	src/Makefile
-	src/core/Makefile
-	src/display/Makefile
-	src/input/Makefile
-	src/rpc/Makefile
-	src/ui/Makefile
-	src/utils/Makefile
         test/Makefile
 ])
