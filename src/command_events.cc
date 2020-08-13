@@ -217,6 +217,7 @@ void apply_try_import(const std::string& path) { if (!rpc::parse_command_file(pa
 
 torrent::Object
 apply_close_low_diskspace(int64_t arg) {
+  lt_log_print(torrent::LOG_INFO, "apply_close_low_diskspace: start");
   core::DownloadList* downloadList = control->core()->download_list();
 
   bool closed = false;
@@ -239,6 +240,7 @@ apply_close_low_diskspace(int64_t arg) {
   if (closed)
     lt_log_print(torrent::LOG_TORRENT_ERROR, "Closed torrents due to low diskspace.");    
 
+  lt_log_print(torrent::LOG_INFO, "apply_close_low_diskspace: end");
   return torrent::Object();
 }
 
