@@ -225,6 +225,7 @@ apply_close_low_diskspace(int64_t arg) {
 
   while ((itr = std::find_if(itr, downloadList->end(), std::mem_fun(&core::Download::is_downloading)))
          != downloadList->end()) {
+    lt_log_print(torrent::LOG_INFO, "apply_close_low_diskspace: checking: " + (*itr)->info()->name());
     if ((*itr)->file_list()->free_diskspace() < (uint64_t)arg) {
       downloadList->close(*itr);
 
