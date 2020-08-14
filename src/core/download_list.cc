@@ -88,6 +88,7 @@ DownloadList::clear() {
 
 void
 DownloadList::session_save() {
+  lt_log_print(torrent::LOG_INFO, "session_save: start");
   unsigned int c = std::count_if(begin(), end(), std::bind1st(std::mem_fun(&DownloadStore::save_resume), control->core()->download_store()));
 
   if (c != size())
@@ -95,6 +96,7 @@ DownloadList::session_save() {
 
   control->dht_manager()->save_dht_cache();
   control->ui()->save_input_history();
+  lt_log_print(torrent::LOG_INFO, "session_save: end");
 }
 
 DownloadList::iterator
